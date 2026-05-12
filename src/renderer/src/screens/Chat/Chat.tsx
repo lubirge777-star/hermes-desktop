@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
-import icon from "../../assets/icon.png";
+import icon from "../../assets/lubi-icon.png";
 import { AgentMarkdown } from "../../components/AgentMarkdown";
 import {
   Trash2 as Trash,

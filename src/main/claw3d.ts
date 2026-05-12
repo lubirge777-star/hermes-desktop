@@ -211,11 +211,16 @@ export async function getClaw3dStatus(): Promise<Claw3dStatus> {
   const cloned = existsSync(join(HERMES_OFFICE_DIR, "package.json"));
   const installed = existsSync(join(HERMES_OFFICE_DIR, "node_modules"));
   const port = getSavedPort();
-  const devRunning = isDevServerRunning();
+  
+  // Check if port is actually listening - this is more reliable than process check
+  const portListening = await checkPort(port);
+  const devRunning = isDevServerRunning() || portListening;
+  
   // Only check port conflict when dev server is NOT running
   const portInUse = devRunning ? false : await checkPort(port);
   const adapterUp = isAdapterRunning();
   const error = devServerError || adapterError;
+  
   return {
     cloned,
     installed,
@@ -243,8 +248,18 @@ function findNpm(): string {
     join(home, ".asdf", "shims", "npm"),
     join(home, ".local", "share", "fnm", "aliases", "default", "bin", "npm"),
     join(home, ".fnm", "aliases", "default", "bin", "npm"),
+    "C:\\Program Files\\nodejs\\npm",
+    "C:\\Program Files (x86)\\nodejs\\npm",
+    join(home, "AppData\\Roaming\\npm\\npm"),
     "/usr/local/bin/npm",
     "/opt/homebrew/bin/npm",
+  ];
+
+  // On Windows, also try .cmd extension
+  const candidatesCmd = [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "C:\\Program Files (x86)\\nodejs\\npm.cmd",
+    join(home, "AppData\\Roaming\\npm\\npm.cmd"),
   ];
 
   // Discover nvm npm dynamically (active version)
@@ -271,16 +286,26 @@ function findNpm(): string {
     }
   }
 
+  // On Windows, also check for .cmd files
+  for (const c of candidatesCmd) {
+    if (existsSync(c)) {
+      _cachedNpmPath = c;
+      return c;
+    }
+  }
+
   // Fallback: which/where (blocks main thread — only runs once)
   try {
-    const npmPath = execSync("which npm 2>/dev/null || where npm 2>/dev/null", {
+    const isWin = process.platform === "win32";
+    const cmd = isWin ? "where npm" : "which npm";
+    const npmPath = execSync(cmd, {
       env: { ...process.env, PATH: getEnhancedPath() },
       timeout: 5000,
     })
       .toString()
       .trim()
       .split("\n")[0];
-    if (npmPath && existsSync(npmPath)) {
+    if (npmPath) {
       _cachedNpmPath = npmPath;
       return npmPath;
     }
@@ -288,8 +313,9 @@ function findNpm(): string {
     /* fall through */
   }
 
-  _cachedNpmPath = "npm";
-  return "npm";
+  // Ultimate fallback: use npm.cmd on Windows (npm is a bash script, not exe)
+  _cachedNpmPath = process.platform === "win32" ? "npm.cmd" : "npm";
+  return _cachedNpmPath;
 }
 
 export async function setupClaw3d(
@@ -384,7 +410,9 @@ export async function setupClaw3d(
   const npm = findNpm();
 
   await new Promise<void>((resolve, reject) => {
-    const proc = spawn(npm, ["install"], {
+    const isWin = process.platform === "win32";
+    const cmdArgs = isWin ? ["/c", "npm install"] : ["install"];
+    const proc = spawn(isWin ? "cmd" : npm, isWin ? cmdArgs : ["install"], {
       cwd: HERMES_OFFICE_DIR,
       env,
       stdio: ["ignore", "pipe", "pipe"],
@@ -448,6 +476,50 @@ export function startDevServer(): boolean {
   devServerLogs = "";
   const port = getSavedPort();
   const npm = findNpm();
+  const isWin = process.platform === "win32";
+  
+  // On Windows, run npm directly via node_modules
+  if (isWin) {
+    const npmPath = join(HERMES_OFFICE_DIR, "node_modules", ".bin", "npm.cmd");
+    const cmdScript = `"${npmPath}" run dev`;
+    const proc = spawn("cmd.exe", ["/c", cmdScript], {
+      cwd: HERMES_OFFICE_DIR,
+      env: {
+        ...process.env,
+        PATH: getEnhancedPath(),
+        HOME: homedir(),
+        TERM: "dumb",
+        PORT: String(port),
+      },
+      stdio: ["ignore", "pipe", "pipe"],
+      detached: true,
+      windowsHide: true,
+    });
+    devServerProcess = proc;
+    if (proc.pid) writePid(DEV_PID_FILE, proc.pid);
+
+    proc.stdout?.on("data", (data: Buffer) => {
+      devServerLogs += stripAnsi(data.toString());
+      if (devServerLogs.length > 2000) devServerLogs = devServerLogs.slice(-2000);
+    });
+
+    proc.stderr?.on("data", (data: Buffer) => {
+      const text = stripAnsi(data.toString());
+      devServerLogs += text;
+      if (devServerLogs.length > 2000) devServerLogs = devServerLogs.slice(-2000);
+      if (!devServerError) devServerError = text.trim().slice(0, 300);
+    });
+
+    proc.on("close", (code) => {
+      if (code && code !== 0 && !devServerError) {
+        devServerError = `Dev server exited with code ${code}`;
+      }
+      devServerProcess = null;
+    });
+
+    return true;
+  }
+  
   const proc = spawn(npm, ["run", "dev"], {
     cwd: HERMES_OFFICE_DIR,
     env: {
@@ -523,6 +595,48 @@ export function startAdapter(): boolean {
   adapterError = "";
   adapterLogs = "";
   const npm = findNpm();
+  const isWin = process.platform === "win32";
+
+  if (isWin) {
+    const npmPath = join(HERMES_OFFICE_DIR, "node_modules", ".bin", "npm.cmd");
+    const cmdScript = `"${npmPath}" run hermes-adapter`;
+    const proc = spawn("cmd.exe", ["/c", cmdScript], {
+      cwd: HERMES_OFFICE_DIR,
+      env: {
+        ...process.env,
+        PATH: getEnhancedPath(),
+        HOME: homedir(),
+        TERM: "dumb",
+      },
+      stdio: ["ignore", "pipe", "pipe"],
+      detached: true,
+      windowsHide: true,
+    });
+    adapterProcess = proc;
+    if (proc.pid) writePid(ADAPTER_PID_FILE, proc.pid);
+
+    proc.stdout?.on("data", (data: Buffer) => {
+      adapterLogs += stripAnsi(data.toString());
+      if (adapterLogs.length > 2000) adapterLogs = adapterLogs.slice(-2000);
+    });
+
+    proc.stderr?.on("data", (data: Buffer) => {
+      const text = stripAnsi(data.toString());
+      adapterLogs += text;
+      if (adapterLogs.length > 2000) adapterLogs = adapterLogs.slice(-2000);
+      if (!adapterError) adapterError = text.trim().slice(0, 300);
+    });
+
+    proc.on("close", (code) => {
+      if (code && code !== 0 && !adapterError) {
+        adapterError = `Adapter exited with code ${code}`;
+      }
+      adapterProcess = null;
+    });
+
+    return true;
+  }
+
   const proc = spawn(npm, ["run", "hermes-adapter"], {
     cwd: HERMES_OFFICE_DIR,
     env: {

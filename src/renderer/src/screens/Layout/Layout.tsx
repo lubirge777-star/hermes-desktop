@@ -13,7 +13,7 @@ import Models from "../Models/Models";
 import Providers from "../Providers/Providers";
 import Schedules from "../Schedules/Schedules";
 import RemoteNotice from "../../components/RemoteNotice";
-import lubiIcon from "../../assets/icon.png";
+import lubiIcon from "../../assets/lubi-icon.png";
 import {
   ChatBubble,
   Clock,
