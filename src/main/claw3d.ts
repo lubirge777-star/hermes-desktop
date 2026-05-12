@@ -481,7 +481,7 @@ export function startDevServer(): boolean {
   // On Windows, run npm directly via node_modules
   if (isWin) {
     const npmPath = join(HERMES_OFFICE_DIR, "node_modules", ".bin", "npm.cmd");
-    const cmdScript = `"${npmPath}" run dev`;
+    const cmdScript = `${npmPath} run dev`;
     const proc = spawn("cmd.exe", ["/c", cmdScript], {
       cwd: HERMES_OFFICE_DIR,
       env: {
@@ -599,7 +599,7 @@ export function startAdapter(): boolean {
 
   if (isWin) {
     const npmPath = join(HERMES_OFFICE_DIR, "node_modules", ".bin", "npm.cmd");
-    const cmdScript = `"${npmPath}" run hermes-adapter`;
+    const cmdScript = `${npmPath} run hermes-adapter`;
     const proc = spawn("cmd.exe", ["/c", cmdScript], {
       cwd: HERMES_OFFICE_DIR,
       env: {
