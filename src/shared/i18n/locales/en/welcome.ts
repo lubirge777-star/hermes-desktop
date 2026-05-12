@@ -1,7 +1,7 @@
 export default {
-  title: "Welcome to Hermes",
+  title: "Welcome to Lubi",
   subtitle:
-    "Your self-improving AI assistant that runs locally on your machine. Private, powerful, and always learning.",
+    "Light Beyond Intelligence. Every day more productive. Your AI partner that learns and grows with you.",
   installIssueTitle: "Installation Issue",
   getStarted: "Get Started",
   retryInstall: "Retry Installation",
@@ -10,9 +10,9 @@ export default {
   installSizeHint: "This will install required components (~2 GB)",
   copyInstallCommand: "Copy install command",
   dividerOr: "or",
-  connectRemote: "Connect to Remote Hermes",
-  connectRemoteTitle: "Connect to Remote Hermes",
-  connectRemoteSubtitle: "Enter the URL of a running Hermes API server.",
+  connectRemote: "Connect to Remote Lubi",
+  connectRemoteTitle: "Connect to Remote Lubi",
+  connectRemoteSubtitle: "Enter the URL of a running Lubi API server.",
   remoteServerUrl: "Server URL",
   remoteApiKey: "API Key (optional)",
   remoteApiKeyPlaceholder: "Bearer token (API_SERVER_KEY)",

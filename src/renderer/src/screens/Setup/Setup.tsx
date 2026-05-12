@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowRight, ExternalLink } from "../../assets/icons";
 import { PROVIDERS, LOCAL_PRESETS } from "../../constants";
 import { useI18n } from "../../components/useI18n";
+import LubiLogo from "../../components/common/HermesLogo";
 
 function Setup({ onComplete }: { onComplete: () => void }): React.JSX.Element {
   const { t } = useI18n();
@@ -76,6 +77,7 @@ function Setup({ onComplete }: { onComplete: () => void }): React.JSX.Element {
 
   return (
     <div className="screen setup-screen">
+      <LubiLogo size={40} premium />
       <h1 className="setup-title">{t("setup.title")}</h1>
       <p className="setup-subtitle">{t("setup.subtitle")}</p>
 

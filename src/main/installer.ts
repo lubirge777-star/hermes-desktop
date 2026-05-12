@@ -373,7 +373,7 @@ export async function runHermesUpdate(
     onProgress({
       step: 1,
       totalSteps: 1,
-      title: "Updating Hermes Agent",
+      title: "Updating Lubi",
       detail: text.trim().slice(0, 120),
       log,
     });

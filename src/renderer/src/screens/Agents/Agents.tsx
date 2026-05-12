@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Plus, Trash, ChatBubble } from "../../assets/icons";
-import HermesLogo from "../../components/common/HermesLogo";
+import LubiLogo from "../../components/common/HermesLogo";
 import { useI18n } from "../../components/useI18n";
 
 interface ProfileInfo {
@@ -26,7 +26,7 @@ function AgentAvatar({ name }: { name: string }): React.JSX.Element {
   if (name === "default") {
     return (
       <div className="agents-card-avatar agents-card-avatar-icon">
-        <HermesLogo size={22} />
+        <LubiLogo size={22} premium />
       </div>
     );
   }

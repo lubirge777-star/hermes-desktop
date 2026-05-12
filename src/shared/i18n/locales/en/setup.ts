@@ -7,8 +7,8 @@ export default {
     openai: { name: "OpenAI", desc: "GPT models", tag: "" },
     local: {
       name: "Local / OpenAI-Compatible",
-      desc: "LM Studio, Ollama, Groq, DeepSeek, Together…",
-      tag: "",
+      desc: "LM Studio, Ollama, NVIDIA, Groq, DeepSeek, Together…",
+      tag: "NVIDIA Recommended",
     },
   },
   localPresets: {
@@ -22,6 +22,7 @@ export default {
     fireworks: "Fireworks",
     cerebras: "Cerebras",
     mistral: "Mistral",
+    nvidia: "NVIDIA (Llama 70B)",
   },
   serverPreset: "Server Preset",
   localGroupLabel: "Local Servers",

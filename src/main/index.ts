@@ -180,6 +180,7 @@ function createWindow(): void {
     height: 750,
     minWidth: 800,
     minHeight: 600,
+    title: "Lubi Desktop",
     show: false,
     autoHideMenuBar: true,
     titleBarStyle: process.platform === "darwin" ? "hiddenInset" : undefined,
@@ -277,7 +278,7 @@ function setupIPC(): void {
         event.sender.send("install-progress", {
           step: 1,
           totalSteps: 1,
-          title: "Updating remote Hermes Agent",
+          title: "Updating remote Lubi",
           detail: "Running hermes update over SSH...",
           log: "Running hermes update over SSH...\n",
         });
@@ -550,7 +551,7 @@ function setupIPC(): void {
                 .trim()
                 .slice(0, 80);
               new Notification({
-                title: "Hermes Agent",
+                title: "Lubi Desktop",
                 body: preview || "Response ready",
               }).show();
             }
@@ -562,7 +563,7 @@ function setupIPC(): void {
             // Notify on error too if window not focused
             if (mainWindow && !mainWindow.isFocused()) {
               new Notification({
-                title: "Hermes Agent — Error",
+                title: "Lubi Desktop — Error",
                 body: error.slice(0, 100),
               }).show();
             }
@@ -1114,8 +1115,8 @@ function setupUpdater(): void {
 }
 
 app.whenReady().then(() => {
-  app.name = "Hermes";
-  electronApp.setAppUserModelId("com.nousresearch.hermes");
+  app.name = "Lubi Desktop";
+  electronApp.setAppUserModelId("com.lubi.desktop");
 
   app.on("browser-window-created", (_, window) => {
     optimizer.watchWindowShortcuts(window);

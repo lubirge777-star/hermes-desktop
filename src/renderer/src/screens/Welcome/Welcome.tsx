@@ -1,5 +1,5 @@
 import { useState } from "react";
-import HermesLogo from "../../components/common/HermesLogo";
+import LubiLogo from "../../components/common/HermesLogo";
 import {
   ArrowRight,
   Refresh,
@@ -92,7 +92,7 @@ function Welcome({
   if (panel === "remote") {
     return (
       <div className="screen welcome-screen">
-        <HermesLogo size={36} />
+        <LubiLogo size={36} premium />
         <h1 className="welcome-title" style={{ fontSize: 22 }}>
           {t("welcome.connectRemoteTitle")}
         </h1>
@@ -158,13 +158,13 @@ function Welcome({
   if (panel === "ssh") {
     return (
       <div className="screen welcome-screen">
-        <HermesLogo size={36} />
+        <LubiLogo size={36} premium />
         <h1 className="welcome-title" style={{ fontSize: 22 }}>
           Connect via SSH
         </h1>
-        <p className="welcome-subtitle" style={{ marginBottom: 24 }}>
-          Tunnel to a remote Hermes over SSH — no exposed ports or API keys needed.
-        </p>
+<p className="welcome-subtitle" style={{ marginBottom: 24 }}>
+            Tunnel to a remote Lubi over SSH — no exposed ports or API keys needed.
+          </p>
 
         <div className="welcome-remote-card">
           <div style={{ display: "flex", gap: 8 }}>
@@ -265,7 +265,7 @@ function Welcome({
 
   return (
     <div className="screen welcome-screen">
-      <HermesLogo size={40} />
+      <LubiLogo size={40} premium />
 
       {error ? (
         <>
@@ -304,9 +304,9 @@ function Welcome({
               🔐 Connect via SSH
             </button>
 
-            <button className="btn btn-secondary welcome-recheck-btn" onClick={() => setPanel("remote")}>
+            <button className="btn btn-secondary welcome-recheck-btn" style={{ marginTop: 12 }} onClick={() => setPanel("remote")}>
               <Globe size={16} />
-              Connect to Remote Hermes
+              Connect to Remote Lubi
             </button>
           </div>
         </>
@@ -326,7 +326,7 @@ function Welcome({
             🔐 Connect via SSH
           </button>
 
-          <button className="btn btn-secondary welcome-recheck-btn" onClick={() => setPanel("remote")}>
+          <button className="btn btn-secondary welcome-recheck-btn" style={{ marginTop: 12 }} onClick={() => setPanel("remote")}>
             <Globe size={16} />
             {t("welcome.connectRemote")}
           </button>

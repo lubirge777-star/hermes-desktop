@@ -1,5 +1,5 @@
 export default {
-  appName: "Hermes Agent",
+  appName: "Lubi Desktop",
   continue: "Continue",
   cancel: "Cancel",
   retry: "Retry",

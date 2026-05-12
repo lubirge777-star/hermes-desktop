@@ -18,6 +18,14 @@ export interface DefaultModel {
 }
 
 const DEFAULT_MODELS: DefaultModel[] = [
+  // ── NVIDIA (Direct - Our primary!) ─────────────────────────────────────
+  {
+    name: "Llama 3.1 70B (NVIDIA)",
+    provider: "custom",
+    model: "meta/llama-3.1-70b-instruct",
+    baseUrl: "https://integrate.api.nvidia.com/v1",
+  },
+
   // ── OpenRouter (200+ models via single API key) ──────────────────────
   {
     name: "Claude Sonnet 4",

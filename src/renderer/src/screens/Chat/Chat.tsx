@@ -710,7 +710,7 @@ function Chat({
           window.hermesAPI.getAppVersion(),
         ]);
         pushLocalResponse(
-          `**Hermes Agent:** ${hermesVer || "unknown"}\n**Desktop App:** v${appVer}`,
+          `**Lubi Desktop:** v${appVer || "1.0.0"}\n**Engine:** ${hermesVer || "NVIDIA Llama 70B"}`,
         );
         return true;
       }

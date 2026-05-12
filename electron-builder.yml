@@ -1,5 +1,5 @@
-appId: com.nousresearch.hermes
-productName: Hermes Agent
+appId: com.lubi.desktop
+productName: Lubi Desktop
 directories:
   buildResources: build
 files:
@@ -12,14 +12,8 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: hermes-agent
-nsis:
-  artifactName: ${name}-${version}-setup.${ext}
-  shortcutName: ${productName}
-  uninstallDisplayName: ${productName}
-  createDesktopShortcut: always
-  oneClick: true
-  perMachine: false
+  executableName: lubi-desktop
+  icon: build/icon.ico
 mac:
   icon: build/icon.icns
   entitlements: build/entitlements.mac.plist
@@ -39,13 +33,12 @@ linux:
     - deb
     - rpm
   maintainer: electronjs.org
-  vendor: Nous Research
+  vendor: Lubi Team
   category: Utility
-  synopsis: Self-improving AI assistant desktop app
+  synopsis: Lubi Desktop - Light Beyond Intelligence
   description: >-
-    Hermes Desktop is a native desktop app for installing, configuring, and chatting
-    with Hermes Agent — a self-improving AI assistant with tool use, multi-platform
-    messaging, and a closed learning loop.
+    Lubi Desktop is a native desktop app for installing, configuring, and chatting
+    with Lubi — Light Beyond Intelligence. Every day more productive.
 appImage:
   artifactName: ${name}-${version}.${ext}
 rpm:
@@ -53,5 +46,5 @@ rpm:
 npmRebuild: false
 publish:
   provider: github
-  owner: fathah
+  owner: lubirge777-star
   repo: hermes-desktop

@@ -13,7 +13,7 @@ import Models from "../Models/Models";
 import Providers from "../Providers/Providers";
 import Schedules from "../Schedules/Schedules";
 import RemoteNotice from "../../components/RemoteNotice";
-import hermeslogo from "../../assets/hermes.png";
+import lubiIcon from "../../assets/icon.png";
 import {
   ChatBubble,
   Clock,
@@ -178,7 +178,7 @@ function Layout(): React.JSX.Element {
     <div className="layout">
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <img src={hermeslogo} height={30} alt="" />
+          <img src={lubiIcon} height={30} className="rounded-full" alt="Lubi" />
         </div>
 
         <nav className="sidebar-nav">
