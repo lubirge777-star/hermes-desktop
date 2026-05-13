@@ -478,10 +478,10 @@ export function startDevServer(): boolean {
   const npm = findNpm();
   const isWin = process.platform === "win32";
   
-  // On Windows, use npx from system node
+  // On Windows, use PowerShell with -Command to run npm directly
   if (isWin) {
-    const cmdScript = `npx --prefix "${HERMES_OFFICE_DIR}" vite`;
-    const proc = spawn("cmd.exe", ["/c", cmdScript], {
+    const psScript = `cd "${HERMES_OFFICE_DIR}"; $env:PORT="${port}"; npm run dev`;
+    const proc = spawn("powershell.exe", ["-ExecutionPolicy", "Bypass", "-Command", psScript], {
       cwd: HERMES_OFFICE_DIR,
       env: {
         ...process.env,
@@ -597,8 +597,8 @@ export function startAdapter(): boolean {
   const isWin = process.platform === "win32";
 
   if (isWin) {
-    const cmdScript = `npx --prefix "${HERMES_OFFICE_DIR}" tsx src/adapter.ts`;
-    const proc = spawn("cmd.exe", ["/c", cmdScript], {
+    const psScript = `cd "${HERMES_OFFICE_DIR}"; npm run hermes-adapter`;
+    const proc = spawn("powershell.exe", ["-ExecutionPolicy", "Bypass", "-Command", psScript], {
       cwd: HERMES_OFFICE_DIR,
       env: {
         ...process.env,
